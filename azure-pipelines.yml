@@ -20,7 +20,18 @@ steps:
     versionSpec: '$(pythonVersion)'
   
 
-- bash: pip install -r requirements.txt -U --update-strategy eager
+- bash: |
+   pip install flake8
+   pip install pylint
+   pip install pytest
+   pip install pytest-azurepipelines
+   pip install pytest-cov
+   pip install wheel
+   pip install numpy
+   pip install scipy
+   pip install matplotlib
+   pip install scikit-learn
+   pip install fire
   displayName: 'Install pachages for build'
 
 - bash: find $(srcDirectory) -type f -name "*.py" | xargs pylint
