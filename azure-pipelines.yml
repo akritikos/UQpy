@@ -27,14 +27,16 @@ steps:
   - script: poetry install 
     displayName: Install project dependencies
   
-
   - script: |
-      python -m pytest --cov=src/UQpy --doctest-modules --junitxml=test-results.xml
-    displayName: Run unit test
+      pre-commit run --all-files
 
-  - task: PublishTestResults@2 
-    inputs: 
-      testResultsFiles: '**/test-results.xml'
+  # - script: |
+  #     python -m pytest --cov=src/UQpy --doctest-modules --junitxml=test-results.xml
+  #   displayName: Run unit test
+
+  # - task: PublishTestResults@2 
+  #   inputs: 
+  #     testResultsFiles: '**/test-results.xml'
 
 
   # - bash: find $(srcDirectory) -type f -name "*.py" | xargs pylint
