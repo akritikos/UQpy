@@ -35,9 +35,9 @@ steps:
         key: pre-commit | .pre-commit-config.yaml | "$(PY)"
         path: $(PRE_COMMIT_HOME)
 
-  # - script: |      
-  #     pre-commit run --all-files
-  #   displayName: Linting
+  - script: |      
+      pre-commit run --all-files
+    displayName: Run pre-commit
 
   # - script: |
   #     python -m pytest --cov=src/UQpy --doctest-modules --junitxml=test-results.xml
