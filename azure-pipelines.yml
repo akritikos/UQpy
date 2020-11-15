@@ -8,36 +8,37 @@ variables:
   srcDirectory: src
 
 trigger:
-- master
+  - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 steps:
-- task: UsePythonVersion@0
-  displayName: 'Use Python $(pythonVersion)'
-  inputs:
-    versionSpec: '$(pythonVersion)'
+  - task: UsePythonVersion@0
+    displayName: "Use Python $(pythonVersion)"
+    inputs:
+      versionSpec: "$(pythonVersion)"
+
+  - script: |
+      python -m pip install --upgrade pip poetry
+      poetry config settings.virtualenvs.create false
+
+  - script: poetry install && poetry develop
+
   
 
-- bash: |
-   pip install flake8
-   pip install pylint
-   pip install pytest
-   pip install pytest-azurepipelines
-   pip install pytest-cov
-   pip install wheel
-   pip install numpy
-   pip install scipy
-   pip install matplotlib
-   pip install scikit-learn
-   pip install fire
-  displayName: 'Install pachages for build'
+  - script: |
+      python -m pytest --cov=src/UQpy --doctest-modules --junitxml=test-results.xml
 
-- bash: find $(srcDirectory) -type f -name "*.py" | xargs pylint
-  displayName: "Linting : pylint"
+  - task: PublishTestResults@2 
+    inputs: 
+      testResultsFiles: '**/test-results.xml'
 
-- bash: flake8
-  condition: always()
-  displayName: "Linting: flake8"
-  workingDirectory: $(srcDirectory)
+
+  # - bash: find $(srcDirectory) -type f -name "*.py" | xargs pylint
+  #   displayName: "Linting : pylint"
+
+  # - bash: flake8
+  #   condition: always()
+  #   displayName: "Linting: flake8"
+  #   workingDirectory: $(srcDirectory)
