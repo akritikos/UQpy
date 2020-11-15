@@ -20,8 +20,7 @@ steps:
     versionSpec: '$(pythonVersion)'
   
 
-- script: |
-    pip install -r requirements.txt -U --update-strategy eager
+- bash: pip install -r requirements.txt -U --update-strategy eager
   displayName: 'Install pachages for build'
 
 - bash: find $(srcDirectory) -type f -name "*.py" | xargs pylint
