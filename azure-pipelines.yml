@@ -29,6 +29,7 @@ steps:
   
   - script: |
       pre-commit run --all-files
+    displayName: Linting
 
   # - script: |
   #     python -m pytest --cov=src/UQpy --doctest-modules --junitxml=test-results.xml
