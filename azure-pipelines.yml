@@ -38,5 +38,6 @@ steps:
   displayName: "Linting : pylint"
 
 - bash: flake8
+  condition: always()
   displayName: "Linting: flake8"
   workingDirectory: $(srcDirectory)
