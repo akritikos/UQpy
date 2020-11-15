@@ -35,6 +35,9 @@ steps:
         key: pre-commit | .pre-commit-config.yaml | "$(PY)"
         path: $(PRE_COMMIT_HOME)
 
+  - script: python -m pip install --upgrade pre-commit
+    displayName: install pre-commit
+
   - script: |      
       pre-commit run --all-files
     displayName: Run pre-commit
