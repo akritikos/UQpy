@@ -38,8 +38,8 @@ steps:
 
   - script: |
       python -m pip install flake8
-      flake8 . --select=E,C,F,W
-    displayName: 'Run lint tests'
+      flake8 . --select=E
+    displayName: 'Installing and running Flake8'
 
   # - script: |
   #     python -m pytest --cov=src/UQpy --doctest-modules --junitxml=test-results.xml
