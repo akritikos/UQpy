@@ -31,6 +31,13 @@ steps:
   
   - script: echo "##vso[task.setvariable variable=PY]$(python -VV)"
 
+  - script: |
+      #Install Flake8
+      pip3 install --user flake8
+      # Install PyTest
+      pip3 install --user pytest
+    displayName: 'Install Flake8 and PyTest'
+
   - script: | 
       python3 -m flake8
     displayName: 'Run Flake8 linter'
