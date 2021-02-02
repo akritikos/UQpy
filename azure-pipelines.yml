@@ -36,8 +36,10 @@ steps:
   #     pip3 install --user pytest
   #   displayName: 'Install Flake8 and PyTest'
 
-  - bash: find $(srcDirectory) -type f -name "*.py" | xargs pylint
-    displayName: "Linting with pylint"
+  - task: PyLint@0
+    inputs:
+      pythonroot: 'src'
+      modules: 'UQpy'
 
 
   # - script: |
