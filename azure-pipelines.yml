@@ -43,7 +43,7 @@ steps:
 
   - script: |
       python -m pip install pylint
-      pylint --ignored-modules=numpy,scipy,matplotlib --disable=R,C,W  src/UQpy
+      pylint --ignored-modules=numpy,scipy,matplotlib,sklearn --disable=R,C,W  src/UQpy
     displayName: "Installing and running Pylint"
 
   # - script: |
