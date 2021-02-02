@@ -5,6 +5,7 @@ from abaqusConstants import *
 import __main__
 import os
 
+# pylint: skip-file
 
 def ODBAnalysis():
     import visualization

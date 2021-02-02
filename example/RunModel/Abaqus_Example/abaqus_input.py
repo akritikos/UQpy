@@ -5,6 +5,7 @@ from abaqusConstants import *
 import __main__
 import numpy as np
 
+# pylint: skip-file
 
 def time_temperature_curve(qtd=None):
     # Define the other parameters of the curve
