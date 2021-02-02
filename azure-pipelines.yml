@@ -36,10 +36,15 @@ steps:
   #     pip3 install --user pytest
   #   displayName: 'Install Flake8 and PyTest'
 
+  # - script: |
+  #     python -m pip install flake8
+  #     flake8 . --select=E
+  #   displayName: 'Installing and running Flake8'
+
   - script: |
-      python -m pip install flake8
-      flake8 . --select=E
-    displayName: 'Installing and running Flake8'
+      python -m pip install pylint
+      pylint --disable=R,C,W  src/UQpy
+    displayName: "Installing and running Pylint"
 
   # - script: |
   #     python -m pytest --cov=src/UQpy --doctest-modules --junitxml=test-results.xml
