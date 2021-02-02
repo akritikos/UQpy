@@ -37,7 +37,11 @@ steps:
   #   displayName: 'Install Flake8 and PyTest'
 
   - script: |
+      #Install Pylint
+      pip3 install --user pylint
+      # Run
       pylint src/UQpy
+    displayName: 'Running pylint'
 
   # - script: |
   #     python -m pytest --cov=src/UQpy --doctest-modules --junitxml=test-results.xml
