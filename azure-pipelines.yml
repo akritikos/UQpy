@@ -38,7 +38,7 @@ steps:
 
   - script: |
       #Install Pylint
-      pip3 install --user pylint
+      pip install --user pylint
       # Run
       pylint src/UQpy
     displayName: 'Running pylint'
