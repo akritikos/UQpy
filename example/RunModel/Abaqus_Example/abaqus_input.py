@@ -115,9 +115,9 @@ def FireProblem():
     mdb.models['FireBenchmark'].materials['Steel'].Elastic(
         temperatureDependency=ON, table=((207000000000.0, 0.33, 0.0), (1.0,
                                                                        0.33, 1200.0)))
-    # mdb.models['FireBenchmark'].materials['Steel'].Plastic(
-    #     temperatureDependency=ON, table=((<fy>, 0.0, 0.0), (1.0, 0.0,
-    #                                                           1200.0)))
+    mdb.models['FireBenchmark'].materials['Steel'].Plastic(
+        temperatureDependency=ON, table=((<fy>, 0.0, 0.0), (1.0, 0.0,
+                                                              1200.0)))
     mdb.models['FireBenchmark'].materials['Steel'].Expansion(table=((1.2e-05,
                                                                      ),))
 
