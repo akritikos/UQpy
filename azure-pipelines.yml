@@ -21,6 +21,16 @@ steps:
     inputs:
       versionSpec: "$(pythonVersion)"
 
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'dimtsap.UQpy'
+      organization: 'dimtsap-github'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: 'dimtsap.UQpy'
+      cliProjectName: 'dimtsap.UQpy'
+      cliSources: '.'
+
   - script: |
       python -m pip install --upgrade pip poetry
       poetry config virtualenvs.in-project true
@@ -28,7 +38,14 @@ steps:
 
   - script: poetry install 
     displayName: Install project dependencies
-  
+
+  - task: SonarCloudAnalyze@1
+
+  # - script: |
+  #     python -m pip install pylint
+  #     pylint --ignored-modules=numpy,scipy,matplotlib,sklearn --disable=E0202 --disable=R,C,W  src/UQpy
+  #   displayName: "Installing and running Pylint"
+
   # - script: |
   #     #Install Flake8
   #     pip3 install --user flake8
@@ -41,10 +58,7 @@ steps:
   #     flake8 . --select=E
   #   displayName: 'Installing and running Flake8'
 
-  - script: |
-      python -m pip install pylint
-      pylint --ignored-modules=numpy,scipy,matplotlib,sklearn --disable=E0202 --disable=R,C,W  src/UQpy
-    displayName: "Installing and running Pylint"
+  
 
   # - script: |
   #     python -m pytest --cov=src/UQpy --doctest-modules --junitxml=test-results.xml
