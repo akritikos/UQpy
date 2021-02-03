@@ -1,9 +1,10 @@
 import sys
-import os
+sys.path.insert(1, '../src')
 import UQpy
 from UQpy.Distributions import *
 from UQpy.Surrogates import *
 import numpy as np
+
 
 np.random.seed(1)
 dist = Uniform(loc=0, scale=10)
