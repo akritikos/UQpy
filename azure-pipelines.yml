@@ -39,27 +39,14 @@ steps:
   
   - script: poetry install 
     displayName: Install project dependencies
-  
+ 
   - script: |
       pip install pytest
       pip install pytest-cov
-    displayName: 'Install test dependencies'  
-  
-  # - script: dir
-  #   workingDirectory: $(Build.SourcesDirectory)/src
-  #   displayName: List contents of a folder
-  
-  - bash: 'pytest --junitxml=$(Build.StagingDirectory)/coverage.xml' 
+      pip install pytest pytest-azurepipelines
+      python -m pytest tests/ --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
     workingDirectory: $(Build.SourcesDirectory)
     displayName: 'Test with pytest'
-
-  # - script: |
-  #     pip install pytest
-  #     pip install pytest-cov
-  #     pip install pytest pytest-azurepipelines
-  #     python -m pytest tests/ --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
-  #   workingDirectory: $(Build.SourcesDirectory)
-  #   displayName: 'Test with pytest'
 
   
   
