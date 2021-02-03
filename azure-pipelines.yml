@@ -40,7 +40,7 @@ steps:
   - script: |
       pip install pytest
       pip install pytest-cov
-      python -m pytest tests --import-mode=prepend --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
+      python -m pytest tests --rootdir=src/UQpy --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
     displayName: 'Test with pytest'
 
   - script: poetry install 
