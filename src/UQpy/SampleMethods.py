@@ -2604,17 +2604,13 @@ class AKMCS:
     * **nsamples** (`int`):
         Total number of samples to be drawn (including the initial samples).
 
-        If `nsamples` is provided when instantiating the class, the ``run`` method will automatically be called. If
-        `nsamples` is not provided, ``AKMCS`` can be executed by invoking the ``run`` method and passing `nsamples`.
+        If `nsamples` and `samples` are provided when instantiating the class, the ``run`` method will automatically be
+        called. If either `nsamples` or `samples` is not provided, ``AKMCS`` can be executed by invoking the ``run``
+        method and passing `nsamples`.
 
     * **nlearn** (`int`):
         Number of samples generated for evaluation of the learning function. Samples for the learning set are drawn
         using ``LHS``.
-
-    * **nstart** (`int`):
-        Number of initial samples, randomly generated using ``LHS``.
-
-        Either `samples` or `nstart` must be provided.
 
     * **qoi_name** (`dict`):
         Name of the quantity of interest. If the quantity of interest is a dictionary, this is used to convert it to
@@ -2672,15 +2668,14 @@ class AKMCS:
 
     """
 
-    def __init__(self, dist_object, runmodel_object, krig_object, samples=None, nsamples=None, nlearn=10000,
-                 nstart=None, qoi_name=None, learning_function='U', n_add=1, random_state=None, verbose=False,
-                 **kwargs):
+    def __init__(self, dist_object, runmodel_object, krig_object, samples=None, nsamples=None, nlearn=None,
+                 qoi_name=None, learning_function='U', n_add=1, random_state=None, verbose=False, **kwargs):
 
         # Initialize the internal variables of the class.
         self.runmodel_object = runmodel_object
         self.samples = np.array(samples)
         self.nlearn = nlearn
-        self.nstart = nstart
+        self.nstart = None
         self.verbose = verbose
         self.qoi_name = qoi_name
 
@@ -2700,10 +2695,11 @@ class AKMCS:
         self.kwargs = kwargs
 
         # Initialize and run preliminary error checks.
-        if self.samples is not None:
-            self.dimension = np.shape(self.samples)[1]
-        else:
-            self.dimension = len(self.dist_object)
+        self.dimension = len(dist_object)
+
+        if samples is not None:
+            if self.dimension != self.samples.shape[1]:
+                raise NotImplementedError("UQpy Error: Dimension of samples and distribution are inconsistent.")
 
         if type(self.learning_function).__name__ == 'function':
             self.learning_function = self.learning_function
@@ -2753,21 +2749,13 @@ class AKMCS:
         else:
             raise NotImplementedError("UQpy: krig_object must have 'fit' and 'predict' methods.")
 
-        # If the initial sample design does not exists, run the initial calculations.
-        if self.samples is None:
-            if self.nstart is None:
-                NotImplementedError("UQpy: User should provide either 'samples' or 'nstart' value.")
-            if self.verbose:
-                print('UQpy: AKMCS - Generating the initial sample set using Latin hypercube sampling.')
-            self.samples = LHS(dist_object=self.dist_object, nsamples=self.nstart, random_state=random_state).samples
-
         if self.verbose:
             print('UQpy: AKMCS - Running the initial sample set using RunModel.')
 
         # Evaluate model at the training points
-        if len(self.runmodel_object.qoi_list) == 0:
-            self.runmodel_object.run(samples=self.samples)
-        else:
+        if len(self.runmodel_object.qoi_list) == 0 and samples is not None:
+            self.runmodel_object.run(samples=self.samples, append_samples=False)
+        if samples is not None:
             if len(self.runmodel_object.qoi_list) != self.samples.shape[0]:
                 raise NotImplementedError("UQpy: There should be no model evaluation or Number of samples and model "
                                           "evaluation in RunModel object should be same.")
@@ -2776,9 +2764,11 @@ class AKMCS:
             if self.nsamples <= 0 or type(self.nsamples).__name__ != 'int':
                 raise NotImplementedError("UQpy: Number of samples to be generated 'nsamples' should be a positive "
                                           "integer.")
-            self.run(nsamples=self.nsamples)
 
-    def run(self, nsamples, samples=None, append_samples=True):
+            if samples is not None:
+                self.run(nsamples=self.nsamples)
+
+    def run(self, nsamples, samples=None, append_samples=True, nstart=None):
         """
         Execute the ``AKMCS`` learning iterations.
 
@@ -2794,6 +2784,11 @@ class AKMCS:
 
         * **samples** (`ndarray`):
             Samples at which to evaluate the model.
+
+        * **nstart** (`int`):
+            Number of initial samples, randomly generated using ``LHS`` class.
+
+            Either `samples` or `nstart` must be provided.
 
         * **append_samples** (`boolean`)
             Append new samples and model evaluations to the existing samples and model evaluations.
@@ -2812,19 +2807,32 @@ class AKMCS:
         """
 
         self.nsamples = nsamples
+        self.nstart = nstart
 
         if samples is not None:
             # New samples are appended to existing samples, if append_samples is TRUE
             if append_samples:
-                self.samples = np.vstack([self.samples, samples])
+                if len(self.samples.shape) == 0:
+                    self.samples = np.array(samples)
+                else:
+                    self.samples = np.vstack([self.samples, np.array(samples)])
             else:
-                self.samples = samples
+                self.samples = np.array(samples)
                 self.runmodel_object.qoi_list = []
 
             if self.verbose:
                 print('UQpy: AKMCS - Evaluating the model at the sample set using RunModel.')
 
             self.runmodel_object.run(samples=samples, append_samples=append_samples)
+        else:
+            if len(self.samples.shape) == 0:
+                if self.nstart is None:
+                    raise NotImplementedError("UQpy: User should provide either 'samples' or 'nstart' value.")
+                if self.verbose:
+                    print('UQpy: AKMCS - Generating the initial sample set using Latin hypercube sampling.')
+                self.samples = LHS(dist_object=self.dist_object, nsamples=self.nstart,
+                                   random_state=self.random_state).samples
+                self.runmodel_object.run(samples=self.samples)
 
         if self.verbose:
             print('UQpy: Performing AK-MCS design...')
