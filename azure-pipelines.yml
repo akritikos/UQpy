@@ -37,10 +37,9 @@ steps:
       poetry config virtualenvs.in-project true
     displayName: Install poetry
   
-  # - script: dir
-  #   workingDirectory: $(Build.SourcesDirectory)/src
-  #   displayName: List contents of a folder
-  
+  - script: poetry install 
+    displayName: Install project dependencies
+ 
   - script: |
       pip install pytest
       pip install pytest-cov
@@ -49,8 +48,7 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)
     displayName: 'Test with pytest'
 
-  - script: poetry install 
-    displayName: Install project dependencies
+  
   
 
   - task: SonarCloudAnalyze@1
