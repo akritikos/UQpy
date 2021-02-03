@@ -37,12 +37,16 @@ steps:
       poetry config virtualenvs.in-project true
     displayName: Install poetry
   
+  - script: dir
+    workingDirectory: $(Agent.BuildDirectory)
+    displayName: List contents of a folder
+  
   - script: |
       pip install pytest
       pip install pytest-cov
       pip install pytest pytest-azurepipelines
-      pip install -e .
       python -m pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
+    workingDirectory: 
     displayName: 'Test with pytest'
 
   - script: poetry install 
