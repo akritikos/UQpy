@@ -29,8 +29,10 @@ steps:
       configMode: 'manual'
       cliProjectKey: 'sonar.uqpy'
       cliProjectName: 'sonar.uqpy'
-      cliSources: '.'
+      cliSources: '.'      
       extraProperties: sonar.exclusions=**/example/**
+                       sonar.exclusions=**/docs/**
+
 
   - script: |
       python -m pip install --upgrade pip poetry
