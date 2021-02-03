@@ -38,7 +38,7 @@ steps:
     displayName: Install poetry
   
   - script: dir
-    workingDirectory: $(Agent.BuildDirectory)
+    workingDirectory: $(Build.SourcesDirectory)
     displayName: List contents of a folder
   
   - script: |
