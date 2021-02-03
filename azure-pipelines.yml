@@ -44,6 +44,7 @@ steps:
       pip install pytest
       pip install pytest-cov
       pip install pytest pytest-azurepipelines
+      echo '##vso[task.prependpath]src'
       python -m pytest tests/ --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
     workingDirectory: $(Build.SourcesDirectory)
     displayName: 'Test with pytest'
