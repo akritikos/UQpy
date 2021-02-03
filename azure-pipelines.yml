@@ -32,6 +32,11 @@ steps:
       cliSources: '.'      
       extraProperties: sonar.exclusions=**/example/**
 
+  - script: |
+      pip install pytest
+      pip install pytest-cov
+      pytest test --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
+    displayName: 'Test with pytest'
 
   - script: |
       python -m pip install --upgrade pip poetry
