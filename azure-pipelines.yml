@@ -46,7 +46,7 @@ steps:
       pip install pytest-cov
       pip install pytest pytest-azurepipelines
       python -m pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
-    workingDirectory: $(Build.SourcesDirectory)
+    workingDirectory: $(Build.SourcesDirectory)/src/UQpy
     displayName: 'Test with pytest'
 
   - script: poetry install 
