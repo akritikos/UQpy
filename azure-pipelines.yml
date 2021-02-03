@@ -37,16 +37,21 @@ steps:
       poetry config virtualenvs.in-project true
     displayName: Install poetry
   
-  # - script: |
-  #     pip install pytest
-  #     pip install pytest-cov
-  #     python -m pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
-  #   displayName: 'Test with pytest'
+  # - script: dir
+  #   workingDirectory: $(Build.SourcesDirectory)/src
+  #   displayName: List contents of a folder
+  
+  - script: |
+      pip install pytest
+      pip install pytest-cov
+      pip install pytest pytest-azurepipelines
+      python -m pytest tests/ --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
+    workingDirectory: $(Build.SourcesDirectory)
+    displayName: 'Test with pytest'
 
   - script: poetry install 
     displayName: Install project dependencies
   
-  - script: poetry run python -m pytest tests 
 
   - task: SonarCloudAnalyze@1
 
