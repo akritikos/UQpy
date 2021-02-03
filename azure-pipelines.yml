@@ -27,25 +27,30 @@ steps:
       organization: 'dimtsap-github'
       scannerMode: 'CLI'
       configMode: 'manual'
-      cliProjectKey: 'dimtsap.UQpy'
-      cliProjectName: 'dimtsap.UQpy'
-      cliSources: '.'
+      cliProjectKey: 'sonar.uqpy'
+      cliProjectName: 'sonar.uqpy'
+      cliSources: '.'      
+      extraProperties: sonar.exclusions=**/example/**
 
   - script: |
       python -m pip install --upgrade pip poetry
       poetry config virtualenvs.in-project true
     displayName: Install poetry
+  
+  - script: |
+      pip install pytest
+      pip install pytest-cov
+      python -m pytest tests --rootdir=src/UQpy --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
+    displayName: 'Test with pytest'
 
   - script: poetry install 
     displayName: Install project dependencies
-
   - task: SonarCloudAnalyze@1
 
-  # - script: |
-  #     python -m pip install pylint
-  #     pylint --ignored-modules=numpy,scipy,matplotlib,sklearn --disable=E0202 --disable=R,C,W  src/UQpy
-  #   displayName: "Installing and running Pylint"
-
+  - task: SonarCloudPublish@1
+    inputs:
+      pollingTimeoutSec: '300'
+  
   # - script: |
   #     #Install Flake8
   #     pip3 install --user flake8
@@ -58,7 +63,10 @@ steps:
   #     flake8 . --select=E
   #   displayName: 'Installing and running Flake8'
 
-  
+  # - script: |
+  #     python -m pip install pylint
+  #     pylint --ignored-modules=numpy,scipy,matplotlib,sklearn --disable=E0202 --disable=R,C,W  src/UQpy
+  #   displayName: "Installing and running Pylint"
 
   # - script: |
   #     python -m pytest --cov=src/UQpy --doctest-modules --junitxml=test-results.xml
