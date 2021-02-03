@@ -30,6 +30,7 @@ steps:
       cliProjectKey: 'sonar.uqpy'
       cliProjectName: 'sonar.uqpy'
       cliSources: '.'
+      extraProperties: sonar.exclusions=**/example/**
 
   - script: |
       python -m pip install --upgrade pip poetry
@@ -38,7 +39,6 @@ steps:
 
   - script: poetry install 
     displayName: Install project dependencies
-  
   - task: SonarCloudAnalyze@1
 
   - task: SonarCloudPublish@1
