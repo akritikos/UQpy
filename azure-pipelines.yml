@@ -31,7 +31,6 @@ steps:
       cliProjectName: 'sonar.uqpy'
       cliSources: '.'      
       extraProperties: sonar.exclusions=**/example/**
-                       sonar.exclusions=**/docs/**
 
 
   - script: |
